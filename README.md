@@ -12,7 +12,7 @@ Nessa aplicação foram trabalhados vários conceitos:
     <li> Tratamento de dados (data e dinheiro) </li>
     <li> Midlewares </li>
     <li> Contextos </li>
-    <li> Hoocks </li>
+    <li> Hooks </li>
     
 </ul>
 
