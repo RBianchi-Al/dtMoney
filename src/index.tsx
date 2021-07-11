@@ -7,6 +7,7 @@ createServer({
   models: {
     transaction: Model,
   },
+  // rotas de criação de transactions
 
   seeds(server){
     server.db.loadData({
@@ -41,6 +42,7 @@ createServer({
     this.post('/transactions', (schema, request) => {
       const data = JSON.parse(request.requestBody)
     
+      // schema é o banco de dados, coloca o model e os dados que vai passar para o model
       return schema.create('transaction', data)
 
     })
