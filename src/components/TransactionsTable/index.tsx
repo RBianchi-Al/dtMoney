@@ -1,26 +1,14 @@
-
-import { useEffect, useState } from 'react'
-import {api} from '../../services/api';
+import { useTransactions } from '../../hooks/useTransactions';
 
 import {Container} from './styles'
 
-interface Transaction {
-    id: number;
-    title: string;
-    amount: number;
-    type: string;
-    category: string;
-    createdAt: string;
-}
 
 export function TransactionsTable(){
-    const [transactions, setTransaction] = useState<Transaction[]>([]);
+    const {transactions} = useTransactions()
+   
 
-    useEffect(() => {
-        api.get('transactions')
-        .then(response => setTransaction(response.data.transactions))
-    }, [])
-
+    // compartilhamento de estados entre vários componentes da aplicação independente de onde os componentes estejam
+    // primeiro: mover estado do componente para o pai, dai consegue compartilhar com filhos. 2 o contexto
 
     return(
 

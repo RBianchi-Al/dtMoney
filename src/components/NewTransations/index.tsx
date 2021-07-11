@@ -4,7 +4,7 @@ import closeImg from '../../assets/close.svg';
 import icomeImg from '../../assets/income.svg';
 import outcomeImg from '../../assets/outcome.svg'
 import { FormEvent, useState } from 'react';
-import {api} from '../../services/api'
+import { useTransactions } from '../../hooks/useTransactions';
 
 Modal.setAppElement('#root')
 
@@ -17,19 +17,27 @@ interface NewTransationPropos {
 export function NewTransationModal({isOpen, onRequestClose}:NewTransationPropos){
     const [type, setType] = useState('deposit')
     const [title, setTitle] = useState('');
-    const [value, setValue] = useState(0);
+    const [amount, setAmount] = useState(0);
     const [category, setCategory] = useState('')
 
-function handleCreateNewTransation(event: FormEvent){
+    const {createTransaction} = useTransactions()
+
+async function handleCreateNewTransation(event: FormEvent){
+//    colocar assincrono tanto aqui qto no contexto, colocar promisse na tipagem
     event.preventDefault()
-   
-    const data =({
+   await createTransaction({
         title,
-        value,
+        amount,
         category,
         type
     })
-    api.post('/transactions', data)
+// com funcao assíncrona, primeiro vai criar e depois fará codigo abaixo
+    // resetar modal
+    setTitle('');
+    setAmount(0);
+    setType('deposit');
+    setCategory('');
+    onRequestClose()
 }
    
     return(
@@ -55,8 +63,8 @@ function handleCreateNewTransation(event: FormEvent){
              <input
              placeholder="Título"
              type="number"
-             value={value}
-             onChange={event => setValue(Number(event.target.value))}
+             value={amount}
+             onChange={event => setAmount(Number(event.target.value))}
 
              />
              <TransactionTypesContainer>

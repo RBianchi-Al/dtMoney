@@ -1,33 +1,83 @@
 import incomeImg from '../../assets/income.svg'
 import outcomeImg from '../../assets/outcome.svg'
 import totalImg from '../../assets/total.svg'
+import { useTransactions } from '../../hooks/useTransactions';
 
 import { Container } from "./styles";
 
 
 export function Summary(){
+    const {transactions} = useTransactions()
+
+    // const totalDeposits = transactions.reduce((acc, transaction) => {
+    //     if(transaction.type === 'deposit'){
+    //         return acc + transaction.amount;
+    //     }
+    //     return acc;
+    // }, 0)
+    // essa virgula e 0 indica o valor inicial, essa é uma forma de criar, mas teriam que ser 3 (saida, entrada e total). Outra forma abaixo com reduce: 
+    const summary = transactions.reduce((acc, transaction) => {
+        if(transaction.type === 'deposit'){
+             acc.deposits += transaction.amount;
+             acc.total += transaction.amount;
+        } else {
+            acc.withdraws += transaction.amount;
+            acc.total -= transaction.amount
+        }
+        return acc;
+    }, {
+        deposits: 0,
+        withdraws: 0,
+        total: 0,
+    })
+    console.log(transactions)
     return (
         <Container>
+
+            {/* forma antiga de consumir handerprops */}
+            {/* <TransactionsContext.Consumer>
+                {(data) => {
+                    console.log(data)
+                    return <p>Ok</p>
+                }}
+                forma moderna usando usecontext
+            </TransactionsContext.Consumer> */}
+
             <div>
                 <header>
                     <p>Entradas</p>
                     <img src={incomeImg} alt="Entradas"/>
                 </header>
-                <strong>R$ 1000,00</strong>
+                <strong>
+                {new Intl.NumberFormat('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                }).format(summary.deposits)}
+                </strong>
             </div>
             <div>
                 <header>
                     <p>Saídas</p>
                     <img src={outcomeImg} alt="Saídas"/>
                 </header>
-                <strong> -R$ 500,00</strong>
+                <strong>- 
+                {new Intl.NumberFormat('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                }).format(summary.withdraws)}
+                </strong>
             </div> 
             <div>
                 <header className="background-button" >
                     <p>Total</p>
                     <img src={totalImg} alt="Total"/>
                 </header>
-                <strong>R$ 500,00</strong>
+                <strong>
+                {new Intl.NumberFormat('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                }).format(summary.total)}
+                </strong>
             </div>  
         </Container>
     )
